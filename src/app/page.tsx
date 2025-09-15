@@ -4,22 +4,38 @@ import { Container } from '@mui/material';
 import * as React from 'react';
 
 export default async function HomePage() {
-  const res = await sendRequest<IBackendRes<ITrackTop[]>>({
+  const chills = await sendRequest<IBackendRes<ITrackTop[]>>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
     method: 'POST',
     body: {
       category: 'CHILL',
-      limit: 1,
+      limit: 10,
     },
   });
 
-  console.log('Check res data ts: ', res.data);
+  const workout = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: {
+      category: 'WORKOUT',
+      limit: 10,
+    },
+  });
+
+  const party = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: {
+      category: 'PARTY',
+      limit: 10,
+    },
+  });
 
   return (
     <Container>
-      <MainSlider />
-      <MainSlider />
-      <MainSlider />
+      <MainSlider title="Top Chills" data={chills?.data ?? []} />
+      <MainSlider title="Top Workout" data={workout?.data ?? []} />
+      <MainSlider title="Top Party" data={party?.data ?? []} />
     </Container>
   );
 }
