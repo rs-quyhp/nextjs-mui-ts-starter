@@ -16,7 +16,7 @@ const AppFooter = () => {
     >
       <Container sx={{ display: 'flex', gap: 10 }}>
         <AudioPlayer
-          src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"
+          src={`${process.env.NEXT_PUBLIC_API_URL}/tracks/hoidanit.mp3`}
           volume={0.5}
           style={{
             background: '#f2f2f2',
