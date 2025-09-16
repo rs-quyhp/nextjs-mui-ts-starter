@@ -1,7 +1,8 @@
 'use client';
 
 import { useWaveSurfer } from '@/utils/customHook';
-import { useMemo, useRef } from 'react';
+import { Button } from '@mui/material';
+import { useCallback, useMemo, useRef } from 'react';
 
 interface IProps {
   audio: string | null;
@@ -19,12 +20,19 @@ const WaveTrack = (props: IProps) => {
     };
   }, []);
 
-  const wavesuffer = useWaveSurfer(containerRef, optionMemo);
+  const { wavesurfer, isPlaying } = useWaveSurfer(containerRef, optionMemo);
+
+  const onPlayclick = useCallback(() => {
+    wavesurfer?.playPause();
+  }, [wavesurfer]);
 
   return (
-    <div ref={containerRef}>
-      <h2>Wave track</h2>
-    </div>
+    <>
+      <div ref={containerRef}>
+        <h2>Wave track</h2>
+      </div>
+      <Button onClick={onPlayclick}>{isPlaying ? 'Pause' : 'Play'}</Button>
+    </>
   );
 };
 

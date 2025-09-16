@@ -14,7 +14,8 @@ export const useWaveSurfer = (
   containerRef: React.RefObject<HTMLDivElement>,
   options: Omit<WaveSurferOptions, 'container'>
 ) => {
-  const [wavesurfer, setWavesuffer] = useState<any>(null);
+  const [wavesurfer, setWavesuffer] = useState<WaveSurfer | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -31,5 +32,16 @@ export const useWaveSurfer = (
     };
   }, [options, containerRef]);
 
-  return wavesurfer;
+  useEffect(() => {
+    if (!wavesurfer) return;
+
+    const subscriptions = [
+      wavesurfer.on('play', () => setIsPlaying(true)),
+      wavesurfer.on('pause', () => setIsPlaying(false)),
+    ];
+
+    return () => subscriptions.forEach((unsub) => unsub());
+  }, [wavesurfer]);
+
+  return { wavesurfer, isPlaying };
 };
