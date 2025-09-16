@@ -1,5 +1,6 @@
 'use client';
 
+import WaveTrack from '@/components/track/wave.track';
 import { useSearchParams } from 'next/navigation';
 
 interface IProps {
@@ -13,14 +14,7 @@ const TrackDetailPage = (props: IProps) => {
   const { slug } = props.params;
   const audio = searchParams.get('audio');
 
-  console.log('Check slug: ', slug);
-  console.log('Check audio: ', audio);
-
-  return (
-    <div>
-      <h2>{audio}</h2>
-    </div>
-  );
+  return <WaveTrack audio={audio} />;
 };
 
 export default TrackDetailPage;
