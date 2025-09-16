@@ -1,10 +1,11 @@
 'use client';
 
 import { useWaveSurfer } from '@/utils/customHook';
-import { Button, Container, duration } from '@mui/material';
+import { Button, Container, duration, IconButton } from '@mui/material';
 import { useCallback, useMemo, useRef } from 'react';
 import { WaveSurferOptions } from 'wavesurfer.js';
 import './wave.scss';
+import { Pause, PlayArrow } from '@mui/icons-material';
 
 interface IProps {
   audio: string | null;
@@ -91,31 +92,114 @@ const WaveTrack = (props: IProps) => {
   }, [wavesurfer]);
 
   return (
-    <Container>
-      <div ref={containerRef} className="wave-form-container">
-        <h2>Wave track</h2>
-        <div ref={timeRef} className="wave-form-time">
-          0:00
+    <Container
+      sx={{
+        background:
+          'linear-gradient(135deg, rgb(106, 112, 67) 0%, rgb(11, 15, 20) 100%)',
+        display: 'flex',
+        height: '400px',
+        padding: '24px',
+        marginTop: '24px',
+        gap: '24px',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: '10px',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <IconButton
+              sx={{
+                background: '#ff6000',
+                width: '50px',
+                height: '50px',
+                color: 'white',
+                ':hover': {
+                  background: 'rgba(255, 98, 0, 0.94)',
+                },
+              }}
+              onClick={onPlayclick}
+            >
+              {isPlaying ? <Pause /> : <PlayArrow />}
+            </IconButton>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}
+            >
+              <h2
+                style={{
+                  margin: 'unset',
+                  padding: '4px',
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  width: 'fit-content',
+                }}
+              >
+                quyhp's song
+              </h2>
+              <h3
+                style={{
+                  margin: 'unset',
+                  padding: '4px',
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  width: 'fit-content',
+                }}
+              >
+                quyhp
+              </h3>
+            </div>
+          </div>
         </div>
-        <div ref={durationRef} className="wave-form-duration">
-          0:00
-        </div>
-
-        <div ref={hoverRef} className="wave-form-hover"></div>
-
         <div
-          className="overlay"
+          ref={containerRef}
           style={{
-            position: 'absolute',
-            height: '30px',
+            cursor: 'pointer',
+            position: 'relative',
             width: '100%',
-            bottom: '0',
-            background: '#ccc',
-            backdropFilter: 'brightness(0.5)',
+            height: '100px',
           }}
-        ></div>
+        >
+          <div ref={timeRef} className="wave-form-time">
+            0:00
+          </div>
+          <div ref={durationRef} className="wave-form-duration">
+            0:00
+          </div>
+
+          <div ref={hoverRef} className="wave-form-hover"></div>
+
+          <div
+            className="overlay"
+            style={{
+              position: 'absolute',
+              height: '30px',
+              width: '100%',
+              bottom: '0',
+              backdropFilter: 'brightness(0.5)',
+            }}
+          ></div>
+        </div>
       </div>
-      <Button onClick={onPlayclick}>{isPlaying ? 'Pause' : 'Play'}</Button>
+      <div
+        style={{
+          width: '250px',
+          height: '250px',
+          background: '#cccccc',
+          flexShrink: '0',
+          margin: '24px',
+        }}
+      ></div>
     </Container>
   );
 };

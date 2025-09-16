@@ -127,6 +127,10 @@ export const useWaveSurfer = (
         (currentTime) =>
           (timeRef.current!.textContent = formatTime(currentTime))
       ),
+      // Play/pause on click
+      wavesurfer.on('interaction', () => {
+        wavesurfer.playPause();
+      }),
     ];
 
     containerRef.current!.addEventListener(
