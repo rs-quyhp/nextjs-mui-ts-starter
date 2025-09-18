@@ -1,7 +1,13 @@
 'use client';
 
 import { useWaveSurfer } from '@/utils/customHook';
-import { Button, Container, duration, IconButton } from '@mui/material';
+import {
+  Button,
+  Container,
+  duration,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
 import { useCallback, useMemo, useRef } from 'react';
 import { WaveSurferOptions } from 'wavesurfer.js';
 import './wave.scss';
@@ -91,6 +97,36 @@ const WaveTrack = (props: IProps) => {
     wavesurfer?.playPause();
   }, [wavesurfer]);
 
+  const arrComments = [
+    {
+      id: 1,
+      avatar: 'http://localhost:8000/images/chill1.png',
+      moment: 10,
+      user: 'username 1',
+      content: 'just a comment1',
+    },
+    {
+      id: 2,
+      avatar: 'http://localhost:8000/images/chill1.png',
+      moment: 30,
+      user: 'username 2',
+      content: 'just a comment3',
+    },
+    {
+      id: 3,
+      avatar: 'http://localhost:8000/images/chill1.png',
+      moment: 50,
+      user: 'username 3',
+      content: 'just a comment3',
+    },
+  ];
+
+  const calLeft = (moment: number) => {
+    const duration = 199;
+    const percent = (moment / duration) * 100;
+    return `${percent}%`;
+  };
+
   return (
     <Container
       sx={{
@@ -161,15 +197,7 @@ const WaveTrack = (props: IProps) => {
             </div>
           </div>
         </div>
-        <div
-          ref={containerRef}
-          style={{
-            cursor: 'pointer',
-            position: 'relative',
-            width: '100%',
-            height: '100px',
-          }}
-        >
+        <div ref={containerRef} className="wave-form-container">
           <div ref={timeRef} className="wave-form-time">
             0:00
           </div>
@@ -189,6 +217,30 @@ const WaveTrack = (props: IProps) => {
               backdropFilter: 'brightness(0.5)',
             }}
           ></div>
+          <div className="comments" style={{ position: 'relative' }}>
+            {arrComments.map((cmt) => (
+              <Tooltip title={cmt.content} arrow>
+                <img
+                  key={cmt.id}
+                  src={cmt.avatar}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    position: 'absolute',
+                    zIndex: '3',
+                    top: '71px',
+                    left: calLeft(cmt.moment),
+                  }}
+                  onPointerMove={(e) => {
+                    const hover = hoverRef.current as HTMLDivElement | null;
+                    if (hover) {
+                      hover.style.width = calLeft(cmt.moment + 3);
+                    }
+                  }}
+                />
+              </Tooltip>
+            ))}
+          </div>
         </div>
       </div>
       <div
