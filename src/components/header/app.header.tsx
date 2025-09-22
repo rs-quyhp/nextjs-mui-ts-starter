@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { alpha, styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -62,7 +62,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function AppHeader() {
   const { data: session } = useSession();
-
+  console.log("Check session: ", session);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -110,8 +110,9 @@ export default function AppHeader() {
       </MenuItem>
       <MenuItem>
         <Link
-          href={"/logout"}
+          href={"#"}
           style={{ color: "unset", textDecoration: "unset" }}
+          onClick={() => signOut()}
         >
           Logout
         </Link>
@@ -220,7 +221,9 @@ export default function AppHeader() {
                   <Avatar onClick={handleProfileMenuOpen}>QP</Avatar>
                 </>
               ) : (
-                <Link href={"/api/auth/signin"}>Login</Link>
+                <Link href={"#"} onClick={() => signIn()}>
+                  Login
+                </Link>
               )}
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
