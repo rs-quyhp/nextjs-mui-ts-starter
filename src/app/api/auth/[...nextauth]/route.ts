@@ -1,7 +1,8 @@
-import NextAuth, { NextAuthOptions } from "next-auth"
+import NextAuth, { AuthOptions } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
-export const authOptions : NextAuthOptions = {
+export const authOptions : AuthOptions = {
+  secret: process.env.NO_SECRET,
   // Configure one or more authentication providers
   providers: [
     GithubProvider({
@@ -14,3 +15,4 @@ export const authOptions : NextAuthOptions = {
 const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
+
