@@ -1,36 +1,36 @@
-import MainSlider from "@/components/main/main.slider";
-import { sendRequest } from "@/utils/api";
-import { Container } from "@mui/material";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import MainSlider from '@/components/main/main.slider';
+import { sendRequest } from '@/utils/api';
+import { Container } from '@mui/material';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
-  console.log("Check server session: ", session);
+  console.log('Check server session: ', session);
 
   const chills = await sendRequest<IBackendRes<ITrackTop[]>>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
-    method: "POST",
+    method: 'POST',
     body: {
-      category: "CHILL",
+      category: 'CHILL',
       limit: 10,
     },
   });
 
   const workout = await sendRequest<IBackendRes<ITrackTop[]>>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
-    method: "POST",
+    method: 'POST',
     body: {
-      category: "WORKOUT",
+      category: 'WORKOUT',
       limit: 10,
     },
   });
 
   const party = await sendRequest<IBackendRes<ITrackTop[]>>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
-    method: "POST",
+    method: 'POST',
     body: {
-      category: "PARTY",
+      category: 'PARTY',
       limit: 10,
     },
   });
