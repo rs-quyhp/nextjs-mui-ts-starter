@@ -9,6 +9,7 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -17,6 +18,8 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Snackbar,
+  SnackbarCloseReason,
   TextField,
   Typography,
 } from '@mui/material';
@@ -36,6 +39,20 @@ export const SignInForm = () => {
 
   const [errorUsername, setErrorUsername] = useState<string>('');
   const [errorPassword, setErrorPassword] = useState<string>('');
+
+  const [open, setOpen] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -74,9 +91,11 @@ export const SignInForm = () => {
     });
 
     if (!res?.error) {
+      setErrMsg('');
       route.push('/');
     } else {
-      alert(res?.error);
+      setErrMsg(res.error);
+      setOpen(true);
     }
   };
 
@@ -136,6 +155,7 @@ export const SignInForm = () => {
               error={isErrorUsername}
               helperText={errorUsername}
               variant="outlined"
+              autoFocus
             />
           </FormControl>
 
@@ -167,6 +187,9 @@ export const SignInForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               error={isErrorPassword}
               helperText={errorPassword}
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') onSubmit();
+              }}
             />
           </FormControl>
 
@@ -195,6 +218,21 @@ export const SignInForm = () => {
           </Grid>
         </Grid>
       </Grid>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {errMsg}
+        </Alert>
+      </Snackbar>
     </form>
   );
 };
