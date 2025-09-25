@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  ArrowBack,
   GitHub,
   Google,
   Lock,
@@ -9,6 +10,7 @@ import {
 } from '@mui/icons-material';
 import {
   Avatar,
+  Box,
   Button,
   Divider,
   FormControl,
@@ -19,10 +21,12 @@ import {
   Typography,
 } from '@mui/material';
 import { signIn } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export const SignInForm = () => {
+  const route = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -63,10 +67,17 @@ export const SignInForm = () => {
       setErrorPassword('Password can not be empty');
     }
 
-    await signIn('credentials', {
+    const res = await signIn('credentials', {
       username,
       password,
+      redirect: false,
     });
+
+    if (!res?.error) {
+      route.push('/');
+    } else {
+      alert(res?.error);
+    }
   };
 
   return (
@@ -94,6 +105,14 @@ export const SignInForm = () => {
             padding: '24px',
           }}
         >
+          <Box
+            sx={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}
+          >
+            <Link href="/">
+              <ArrowBack />
+            </Link>
+          </Box>
+
           <Grid
             sx={{
               display: 'flex',

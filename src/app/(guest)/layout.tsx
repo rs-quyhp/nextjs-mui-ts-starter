@@ -1,5 +1,4 @@
 import '@/app/styles/app.css';
-import AuthProvider from '../lib/auth.provider';
 
 export const metadata = {
   title: 'Next.js',
@@ -11,11 +10,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <AuthProvider>
-        <body>{children}</body>
-      </AuthProvider>
-    </html>
-  );
+  return <>{children};</>;
 }

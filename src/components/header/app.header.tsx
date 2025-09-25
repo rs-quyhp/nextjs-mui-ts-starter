@@ -221,7 +221,10 @@ export default function AppHeader() {
                   <Avatar onClick={handleProfileMenuOpen}>QP</Avatar>
                 </>
               ) : (
-                <Link href={'#'} onClick={() => signIn()}>
+                <Link
+                  href={'/auth/signin'}
+                  // onClick={() => signIn()}
+                >
                   Login
                 </Link>
               )}
