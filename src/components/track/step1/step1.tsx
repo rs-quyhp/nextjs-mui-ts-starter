@@ -5,20 +5,28 @@ import { useSession } from 'next-auth/react';
 import { useCallback } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import InputFileUpload from '../upload.button';
+import { ITrackUpload } from '../upload.tabs';
 import './theme.css';
 
 interface IProps {
   setTabIndex: (i: number) => void;
+  setTrackUpload: (value: any) => void;
 }
 
 const Step1 = (props: IProps) => {
-  const { setTabIndex } = props;
+  const { setTabIndex, setTrackUpload } = props;
   const { data: session } = useSession();
 
   const onDrop = useCallback(
     async (acceptedFiles: FileWithPath[]) => {
       if (acceptedFiles && acceptedFiles[0]) {
+        setTabIndex(1);
+
         const file = acceptedFiles[0];
+        const trackUpload: ITrackUpload = {
+          trackName: file.name,
+          percent: 0,
+        };
         const formData = new FormData();
         formData.append('fileUpload', file);
         console.log('Check files: ', file);
@@ -32,6 +40,16 @@ const Step1 = (props: IProps) => {
               headers: {
                 Authorization: `Bearer ${session?.access_token}`,
                 target_type: 'tracks',
+                delay: 1000,
+              },
+              onUploadProgress: (progressEvent) => {
+                if (progressEvent?.total) {
+                  let percentCompleted = Math.floor(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                  );
+                  setTrackUpload({ ...trackUpload, percent: percentCompleted });
+                  console.log('Check progress: ', percentCompleted);
+                }
               },
             }
           );
@@ -41,8 +59,6 @@ const Step1 = (props: IProps) => {
           //@ts-ignore
           alert(error?.response?.data?.message);
         }
-
-        // setTabIndex(1);
       }
     },
     [session]

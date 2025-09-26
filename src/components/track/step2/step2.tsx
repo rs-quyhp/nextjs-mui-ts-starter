@@ -8,8 +8,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 import InputFileUpload from '../upload.button';
+import { ITrackUpload } from '../upload.tabs';
+
+interface IProps {
+  trackUpload: ITrackUpload;
+}
 
 function LinearProgressWithLabel(
   props: LinearProgressProps & { value: number }
@@ -29,19 +33,8 @@ function LinearProgressWithLabel(
   );
 }
 
-const Step2 = () => {
-  const [progress, setProgress] = useState(10);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 10 : prevProgress + 10
-      );
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+const Step2 = (props: IProps) => {
+  const { trackUpload } = props;
 
   const categories = [
     {
@@ -60,8 +53,8 @@ const Step2 = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography>Your uploading track:</Typography>
-      <LinearProgressWithLabel value={progress} />
+      <Typography>Your uploading track: {trackUpload.trackName}</Typography>
+      <LinearProgressWithLabel value={trackUpload.percent ?? 0} />
 
       <Grid container>
         <Grid
