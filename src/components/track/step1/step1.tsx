@@ -1,8 +1,11 @@
 'use client';
 
+import { sendRequestFile } from '@/utils/api';
+import { useSession } from 'next-auth/react';
+import { useCallback } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import './theme.css';
 import InputFileUpload from '../upload.button';
+import './theme.css';
 
 interface IProps {
   setTabIndex: (i: number) => void;
@@ -10,13 +13,38 @@ interface IProps {
 
 const Step1 = (props: IProps) => {
   const { setTabIndex } = props;
+  const { data: session } = useSession();
 
-  const onDrop = (acceptedFiles: FileWithPath[]) => {
-    setTabIndex(1);
-  };
+  const onDrop = useCallback(
+    async (acceptedFiles: FileWithPath[]) => {
+      if (acceptedFiles && acceptedFiles[0]) {
+        const file = acceptedFiles[0];
+        const formData = new FormData();
+        formData.append('fileUpload', file);
+        console.log('Check files: ', file);
+        console.log('Check client session: ', session);
+
+        const res = await sendRequestFile<IBackendRes<any>>({
+          url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/upload`,
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            target_type: 'tracks',
+          },
+          body: formData,
+        });
+
+        // setTabIndex(1);
+      }
+    },
+    [session]
+  );
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
+    accept: {
+      audio: ['audio/*'],
+    },
   });
 
   const files = acceptedFiles.map((file: FileWithPath) => (
