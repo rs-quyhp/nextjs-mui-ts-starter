@@ -1,6 +1,6 @@
 'use client';
 
-import { sendRequestFile } from '@/utils/api';
+import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useCallback } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
@@ -24,15 +24,23 @@ const Step1 = (props: IProps) => {
         console.log('Check files: ', file);
         console.log('Check client session: ', session);
 
-        const res = await sendRequestFile<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/upload`,
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${session?.access_token}`,
-            target_type: 'tracks',
-          },
-          body: formData,
-        });
+        try {
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/upload`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${session?.access_token}`,
+                target_type: 'tracks',
+              },
+            }
+          );
+
+          console.log('Check res: ', res);
+        } catch (error) {
+          //@ts-ignore
+          alert(error?.response?.data?.message);
+        }
 
         // setTabIndex(1);
       }
