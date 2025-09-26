@@ -92,6 +92,7 @@ export const SignInForm = () => {
 
     if (!res?.error) {
       setErrMsg('');
+      setOpen(false);
       route.push('/');
     } else {
       setErrMsg(res.error);

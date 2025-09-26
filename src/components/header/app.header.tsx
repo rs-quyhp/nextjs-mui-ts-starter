@@ -217,7 +217,7 @@ export default function AppHeader() {
                 <>
                   <Link href={'playlist'}>Playlists</Link>
                   <Link href={'like'}>Likes</Link>
-                  <Link href={'upload'}>Upload</Link>
+                  <Link href={'/track/upload'}>Upload</Link>
                   <Avatar onClick={handleProfileMenuOpen}>QP</Avatar>
                 </>
               ) : (
