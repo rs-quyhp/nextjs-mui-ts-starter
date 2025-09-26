@@ -3,7 +3,7 @@ import { Container } from '@mui/material';
 
 const UploadTrackPage = () => {
   return (
-    <Container sx={{ marginTop: '100px' }}>
+    <Container sx={{ marginTop: '12px' }}>
       <UploadTabs />
     </Container>
   );

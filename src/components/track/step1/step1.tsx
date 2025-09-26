@@ -1,28 +1,18 @@
 'use client';
 
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import { Button } from '@mui/material';
-import { CloudUpload } from '@mui/icons-material';
 import './theme.css';
+import InputFileUpload from '../upload.button';
 
-const InputFileUpload = () => {
-  return (
-    <Button
-      component="label"
-      role={undefined}
-      variant="contained"
-      tabIndex={-1}
-      startIcon={<CloudUpload />}
-      onClick={(e) => e.preventDefault()}
-    >
-      Upload files
-    </Button>
-  );
-};
+interface IProps {
+  setTabIndex: (i: number) => void;
+}
 
-const Step1 = () => {
+const Step1 = (props: IProps) => {
+  const { setTabIndex } = props;
+
   const onDrop = (acceptedFiles: FileWithPath[]) => {
-    console.log('Check accepted files: ', acceptedFiles);
+    setTabIndex(1);
   };
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -39,7 +29,7 @@ const Step1 = () => {
     <section className="container">
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <InputFileUpload />
+        <InputFileUpload onClick={(e) => e.preventDefault()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
       <aside>
