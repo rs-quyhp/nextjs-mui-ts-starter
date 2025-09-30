@@ -1,5 +1,6 @@
 import '@/app/styles/app.css';
 import ThemeRegistry from '@/components/theme-registry/theme.registry';
+import { ToastProvider } from '@/utils/toast';
 import AuthProvider from './lib/auth.provider';
 
 export const metadata = {
@@ -16,7 +17,9 @@ export default function RootLayout({
     <html lang="en">
       <ThemeRegistry>
         <AuthProvider>
-          <body>{children}</body>
+          <ToastProvider>
+            <body>{children}</body>
+          </ToastProvider>
         </AuthProvider>
       </ThemeRegistry>
     </html>

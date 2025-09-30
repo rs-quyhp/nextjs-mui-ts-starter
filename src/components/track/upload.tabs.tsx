@@ -53,15 +53,15 @@ const UploadTabs = () => {
           aria-label="basic tabs example"
           variant="fullWidth"
         >
-          <Tab label="Tracks" />
-          <Tab label="Basic info" />
+          <Tab label="Tracks" disabled={value !== 0} />
+          <Tab label="Basic info" disabled={value === 0} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <Step1 setTabIndex={setValue} setTrackUpload={setTrackUpload} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <Step2 trackUpload={trackUpload} />
+        <Step2 trackUpload={trackUpload} setTabIndex={setValue} />
       </CustomTabPanel>
     </>
   );

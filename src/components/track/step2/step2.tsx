@@ -1,6 +1,7 @@
 'use client';
 
 import { sendRequest } from '@/utils/api';
+import { useToast } from '@/utils/toast';
 import {
   Box,
   Button,
@@ -20,6 +21,7 @@ import { ITrackUpload } from '../upload.tabs';
 
 interface IProps {
   trackUpload: ITrackUpload;
+  setTabIndex: (i: number) => void;
 }
 
 export interface ITrackInfor {
@@ -49,9 +51,10 @@ function LinearProgressWithLabel(
 }
 
 const Step2 = (props: IProps) => {
-  const { trackUpload } = props;
+  const { trackUpload, setTabIndex } = props;
   const { data: session } = useSession();
   const route = useRouter();
+  const toast = useToast();
   const [trackInfo, setTrackInfo] = useState<ITrackInfor>({
     title: '',
     description: '',
@@ -89,9 +92,10 @@ const Step2 = (props: IProps) => {
     console.log('Check create track res: ', res);
 
     if (!res.error) {
-      route.push('/');
+      toast.success('New track added');
+      setTabIndex(0);
     } else {
-      alert(res.message);
+      toast.error(res.message);
     }
   };
 
