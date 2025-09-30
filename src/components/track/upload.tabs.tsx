@@ -14,6 +14,7 @@ interface TabPanelProps {
 export interface ITrackUpload {
   trackName: string;
   percent: number;
+  uploadedTrackName: string;
 }
 const CustomTabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
@@ -36,6 +37,7 @@ const UploadTabs = () => {
   const [trackUpload, setTrackUpload] = useState<ITrackUpload>({
     trackName: '',
     percent: 0,
+    uploadedTrackName: '',
   });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {

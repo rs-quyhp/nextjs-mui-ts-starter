@@ -1,9 +1,12 @@
+'use client';
+
 import styled from '@emotion/styled';
 import { CloudUpload } from '@mui/icons-material';
 import { Button } from '@mui/material';
 
 interface IProps {
-  onClick: (e: any) => void;
+  onClick?: (e: any) => void;
+  onChange?: (e: any) => void;
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -18,8 +21,8 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const InputFileUpload = (props: IProps) => {
-  const { onClick } = props;
+const UploadButton = (props: IProps) => {
+  const { onClick, onChange } = props;
 
   return (
     <Button
@@ -29,15 +32,15 @@ const InputFileUpload = (props: IProps) => {
       tabIndex={-1}
       startIcon={<CloudUpload />}
       onClick={onClick}
+      onChange={onChange}
     >
       Upload files
       <VisuallyHiddenInput
         type="file"
         onChange={(event) => console.log(event.target.files)}
-        multiple
       />
     </Button>
   );
 };
 
-export default InputFileUpload;
+export default UploadButton;

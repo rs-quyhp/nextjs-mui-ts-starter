@@ -1,3 +1,6 @@
+'use client';
+
+import { sendRequest } from '@/utils/api';
 import {
   Box,
   Button,
@@ -8,11 +11,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import InputFileUpload from '../upload.button';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import UploadButton from '../upload.button';
 import { ITrackUpload } from '../upload.tabs';
 
 interface IProps {
   trackUpload: ITrackUpload;
+}
+
+export interface ITrackInfor {
+  title: string;
+  description: string;
+  trackUrl: string;
+  imgUrl: string;
+  category: string;
 }
 
 function LinearProgressWithLabel(
@@ -35,6 +50,15 @@ function LinearProgressWithLabel(
 
 const Step2 = (props: IProps) => {
   const { trackUpload } = props;
+  const { data: session } = useSession();
+  const route = useRouter();
+  const [trackInfo, setTrackInfo] = useState<ITrackInfor>({
+    title: '',
+    description: '',
+    trackUrl: '',
+    imgUrl: '',
+    category: '',
+  });
 
   const categories = [
     {
@@ -50,6 +74,66 @@ const Step2 = (props: IProps) => {
       label: 'PARTY',
     },
   ];
+
+  const onSave = async () => {
+    console.log('check track info: ', trackInfo);
+    const res = await sendRequest<IBackendRes<ITrackTop[]>>({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks`,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      body: trackInfo,
+    });
+
+    console.log('Check create track res: ', res);
+
+    if (!res.error) {
+      route.push('/');
+    } else {
+      alert(res.message);
+    }
+  };
+
+  const handleUpload = async (image: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('fileUpload', image);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            target_type: 'images',
+          },
+        }
+      );
+
+      console.log('Check image upload: ', res);
+      if (res?.data?.data?.fileName) {
+        setTrackInfo(
+          (prevTrackInfo: ITrackInfor) =>
+            ({
+              ...prevTrackInfo,
+              imgUrl: res.data.data.fileName,
+            } as ITrackInfor)
+        );
+      }
+    } catch (error) {
+      //@ts-ignore
+      alert(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (trackUpload && trackUpload.uploadedTrackName) {
+      setTrackInfo((prevTrackInfo: ITrackInfor) => ({
+        ...prevTrackInfo,
+        trackUrl: trackUpload.uploadedTrackName,
+      }));
+    }
+  }, [trackUpload]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -75,7 +159,14 @@ const Step2 = (props: IProps) => {
               height: '250px',
               background: '#f2f2f2',
             }}
-          ></Box>
+          >
+            {trackInfo.imgUrl && (
+              <img
+                src={`${process.env.NEXT_PUBLIC_API_URL}/images/${trackInfo.imgUrl}`}
+                style={{ height: '250px' }}
+              />
+            )}
+          </Box>
           <Box
             sx={{
               display: 'flex',
@@ -88,7 +179,16 @@ const Step2 = (props: IProps) => {
                 maxWidth: '200px',
               }}
             >
-              <InputFileUpload onClick={(e) => {}} />
+              <UploadButton
+                onChange={(e) => {
+                  const event = e.target as HTMLInputElement;
+                  if (event.files) {
+                    const file = event.files[0];
+                    console.log('Check upload button: ', file);
+                    handleUpload(file);
+                  }
+                }}
+              />
             </Box>
           </Box>
         </Grid>
@@ -109,12 +209,26 @@ const Step2 = (props: IProps) => {
               fullWidth
               margin="dense"
               variant="standard"
+              value={trackInfo?.title}
+              onChange={(e) =>
+                setTrackInfo((prevTrackInfo: ITrackInfor) => ({
+                  ...prevTrackInfo,
+                  title: e.target.value,
+                }))
+              }
             />
             <TextField
               label="Description"
               fullWidth
               margin="dense"
               variant="standard"
+              value={trackInfo?.description}
+              onChange={(e) =>
+                setTrackInfo((prevTrackInfo: ITrackInfor) => ({
+                  ...prevTrackInfo,
+                  description: e.target.value,
+                }))
+              }
             />
             <TextField
               label="Category"
@@ -123,6 +237,13 @@ const Step2 = (props: IProps) => {
               margin="dense"
               variant="standard"
               defaultValue={'CHILL'}
+              value={trackInfo?.category}
+              onChange={(e) =>
+                setTrackInfo((prevTrackInfo: ITrackInfor) => ({
+                  ...prevTrackInfo,
+                  category: e.target.value,
+                }))
+              }
             >
               {categories.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -131,7 +252,7 @@ const Step2 = (props: IProps) => {
               ))}
             </TextField>
           </Box>
-          <Button variant="outlined" sx={{ maxWidth: '80px' }}>
+          <Button variant="outlined" sx={{ maxWidth: '80px' }} onClick={onSave}>
             SAVE
           </Button>
         </Grid>

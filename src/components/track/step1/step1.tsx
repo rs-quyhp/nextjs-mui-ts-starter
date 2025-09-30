@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useCallback } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import InputFileUpload from '../upload.button';
+import UploadButton from '../upload.button';
 import { ITrackUpload } from '../upload.tabs';
 import './theme.css';
 
@@ -23,10 +23,6 @@ const Step1 = (props: IProps) => {
         setTabIndex(1);
 
         const file = acceptedFiles[0];
-        const trackUpload: ITrackUpload = {
-          trackName: file.name,
-          percent: 0,
-        };
         const formData = new FormData();
         formData.append('fileUpload', file);
         console.log('Check files: ', file);
@@ -47,13 +43,31 @@ const Step1 = (props: IProps) => {
                   let percentCompleted = Math.floor(
                     (progressEvent.loaded * 100) / progressEvent.total
                   );
-                  setTrackUpload({ ...trackUpload, percent: percentCompleted });
+                  if (percentCompleted > 0) {
+                    setTrackUpload(
+                      (prevTrackUpload: ITrackUpload) =>
+                        ({
+                          ...prevTrackUpload,
+                          percent: percentCompleted,
+                          trackName: file.name,
+                        } as ITrackUpload)
+                    );
+                  }
                   console.log('Check progress: ', percentCompleted);
                 }
               },
             }
           );
 
+          if (res?.data?.data?.fileName) {
+            setTrackUpload(
+              (prevTrackUpload: ITrackUpload) =>
+                ({
+                  ...prevTrackUpload,
+                  uploadedTrackName: res.data.data.fileName,
+                } as ITrackUpload)
+            );
+          }
           console.log('Check res: ', res);
         } catch (error) {
           //@ts-ignore
@@ -81,7 +95,7 @@ const Step1 = (props: IProps) => {
     <section className="container">
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <InputFileUpload onClick={(e) => e.preventDefault()} />
+        <UploadButton onClick={(e) => e.preventDefault()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
       <aside>
