@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { alpha, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
@@ -102,7 +102,7 @@ export default function AppHeader() {
     >
       <MenuItem>
         <Link
-          href={'/profile'}
+          href={`/profile/${session?.user._id}`}
           style={{ color: 'unset', textDecoration: 'unset' }}
         >
           Profile
