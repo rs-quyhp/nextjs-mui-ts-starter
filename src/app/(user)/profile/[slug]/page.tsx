@@ -15,7 +15,7 @@ const ProfilePage = async ({ params }: { params: { slug: string } }) => {
   console.log('Check user tracks: ', data);
 
   return (
-    <Container sx={{ marginTop: '24px', marginBottom: '112px' }}>
+    <Container sx={{ my: '24px' }}>
       <Grid container spacing={2}>
         {data?.map((track, index) => (
           <Grid item xs={12} md={6} key={index}>
