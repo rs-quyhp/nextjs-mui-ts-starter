@@ -45,7 +45,9 @@ const ProfileTrack = (props: IProp) => {
             component="div"
             variant="h5"
             onClick={() =>
-              route.push(`/track/${track._id}?audio=${track.trackUrl}`)
+              route.push(
+                `/track/${track._id}?audio=${track.trackUrl}&id=${track._id}`
+              )
             }
             sx={{
               cursor: 'pointer',

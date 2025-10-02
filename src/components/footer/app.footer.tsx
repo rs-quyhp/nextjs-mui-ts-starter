@@ -69,14 +69,14 @@ const AppFooter = () => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '10px',
+              gap: '4px',
               justifyContent: 'center',
               alignItems: 'start',
               minWidth: 100,
             }}
           >
-            <div style={{ color: '#ccc' }}>QuyHP</div>
-            <div style={{ color: 'black' }}>Who am I</div>
+            <div style={{ color: '#ccc' }}>{currentTrack?.description}</div>
+            <div style={{ color: 'black' }}>{currentTrack?.title}</div>
           </Box>
         </Container>
       </AppBar>
