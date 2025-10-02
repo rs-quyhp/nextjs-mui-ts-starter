@@ -1,11 +1,38 @@
 'use client';
+import { useTrackContext } from '@/app/lib/track.wrapper';
 import { useHasMounted } from '@/utils/customHook';
 import { AppBar, Box, Container } from '@mui/material';
-import AudioPlayer from 'react-h5-audio-player';
+import { useEffect, useRef } from 'react';
+import {
+  default as AudioPlayer,
+  default as H5AudioPlayer,
+} from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
 const AppFooter = () => {
   const hasMounted = useHasMounted();
+  const player = useRef<H5AudioPlayer>(null);
+  const { currentTrack, setCurrentTrack } = useTrackContext() ?? {};
+
+  useEffect(() => {
+    console.log('Check track: ', currentTrack);
+    if (player) {
+      if (currentTrack?.isPlaying) {
+        player.current?.audio?.current?.play();
+      } else {
+        player.current?.audio?.current?.pause();
+      }
+    }
+  }, [currentTrack, player]);
+
+  const onAudioPlayPause = (isPlaying: Boolean) => {
+    if (setCurrentTrack && currentTrack?.isPlaying !== isPlaying) {
+      setCurrentTrack((prevTrack: ITrackContext) => ({
+        ...prevTrack,
+        isPlaying: isPlaying,
+      }));
+    }
+  };
 
   if (!hasMounted) return <></>;
 
@@ -25,13 +52,18 @@ const AppFooter = () => {
           }}
         >
           <AudioPlayer
-            src={`${process.env.NEXT_PUBLIC_API_URL}/tracks/hoidanit.mp3`}
+            ref={player}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/tracks/${
+              currentTrack ? currentTrack.trackUrl : 'hoidanit.mp3'
+            }`}
             volume={0.5}
             style={{
               background: '#f2f2f2',
               boxShadow: 'unset',
             }}
             layout="horizontal-reverse"
+            onPlay={() => onAudioPlayPause(true)}
+            onPause={() => onAudioPlayPause(false)}
           />
           <Box
             sx={{

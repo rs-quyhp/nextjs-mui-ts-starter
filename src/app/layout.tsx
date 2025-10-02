@@ -2,6 +2,7 @@ import '@/app/styles/app.css';
 import ThemeRegistry from '@/components/theme-registry/theme.registry';
 import { ToastProvider } from '@/utils/toast';
 import AuthProvider from './lib/auth.provider';
+import { TrackContextProvider } from './lib/track.wrapper';
 
 export const metadata = {
   title: 'Next.js',
@@ -18,7 +19,9 @@ export default function RootLayout({
       <ThemeRegistry>
         <AuthProvider>
           <ToastProvider>
-            <body>{children}</body>
+            <TrackContextProvider>
+              <body>{children}</body>
+            </TrackContextProvider>
           </ToastProvider>
         </AuthProvider>
       </ThemeRegistry>

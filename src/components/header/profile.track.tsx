@@ -1,6 +1,7 @@
 'use client';
 
-import { PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
+import { useTrackContext } from '@/app/lib/track.wrapper';
+import { Pause, PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -19,7 +20,17 @@ interface IProp {
 const ProfileTrack = (props: IProp) => {
   const theme = useTheme();
   const route = useRouter();
+  const { currentTrack, setCurrentTrack } = useTrackContext() ?? {};
   const { track } = props;
+
+  const onClickPlay = () => {
+    if (setCurrentTrack)
+      setCurrentTrack((prevTrack: IShareTrack) => ({
+        ...track,
+        isPlaying:
+          prevTrack?.trackUrl === track.trackUrl ? !prevTrack.isPlaying : true,
+      }));
+  };
 
   return (
     <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -66,8 +77,13 @@ const ProfileTrack = (props: IProp) => {
           <IconButton aria-label="previous">
             {theme.direction === 'rtl' ? <SkipNext /> : <SkipPrevious />}
           </IconButton>
-          <IconButton aria-label="play/pause">
-            <PlayArrow sx={{ height: 38, width: 38 }} />
+          <IconButton aria-label="play/pause" onClick={onClickPlay}>
+            {currentTrack?.isPlaying &&
+            currentTrack.trackUrl === track.trackUrl ? (
+              <Pause sx={{ height: 38, width: 38 }} />
+            ) : (
+              <PlayArrow sx={{ height: 38, width: 38 }} />
+            )}
           </IconButton>
           <IconButton aria-label="next">
             {theme.direction === 'rtl' ? <SkipPrevious /> : <SkipNext />}
