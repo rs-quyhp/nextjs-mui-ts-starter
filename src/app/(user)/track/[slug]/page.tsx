@@ -1,3 +1,4 @@
+import CommentTrack from '@/components/track/comment.track';
 import WaveTrack from '@/components/track/wave.track';
 import { sendRequest } from '@/utils/api';
 
@@ -26,7 +27,12 @@ const TrackDetailPage = async (props: IProps) => {
 
   if (!trackRes?.data) return <></>;
 
-  return <WaveTrack track={trackRes.data} comments={commentRes.data?.result} />;
+  return (
+    <>
+      <WaveTrack track={trackRes.data} comments={commentRes.data?.result} />
+      <CommentTrack track={trackRes.data} comments={commentRes.data?.result} />
+    </>
+  );
 };
 
 export default TrackDetailPage;

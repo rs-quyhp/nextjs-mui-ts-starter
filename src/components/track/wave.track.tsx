@@ -22,7 +22,8 @@ const WaveTrack = (props: IProps) => {
   const { track, comments } = props;
   const { _id: id, trackUrl: audio } = track || {};
 
-  const { currentTrack, setCurrentTrack } = useTrackContext() ?? {};
+  const { currentTrack, setCurrentTrack, setWavesurfer } =
+    useTrackContext() ?? {};
 
   const optionMemo = useMemo((): Omit<WaveSurferOptions, 'container'> => {
     let gradient, progressGradient;
@@ -102,6 +103,12 @@ const WaveTrack = (props: IProps) => {
       wavesurfer?.playPause();
     }
   }, [currentTrack, isPlaying]);
+
+  useEffect(() => {
+    if (wavesurfer && setWavesurfer) {
+      setWavesurfer(wavesurfer);
+    }
+  }, [wavesurfer]);
 
   const calLeft = (moment: number) => {
     const duration = 199;

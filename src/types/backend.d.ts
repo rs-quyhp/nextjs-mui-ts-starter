@@ -53,6 +53,8 @@ declare global {
   interface ITrackContext {
     currentTrack: IShareTrack | null;
     setCurrentTrack: (v: any) => void;
+    wavesurfer: WaveSurfer | null;
+    setWavesurfer: (v: any) => void;
   }
 
   interface IShareTrack extends ITrackTop {

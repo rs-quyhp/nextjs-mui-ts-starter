@@ -37,50 +37,70 @@ const AppFooter = () => {
   if (!hasMounted) return <></>;
 
   return (
-    <div style={{ marginTop: 100 }}>
-      <AppBar
-        position="fixed"
-        sx={{ top: 'auto', bottom: 0, background: '#f2f2f2' }}
-      >
-        <Container
-          sx={{
-            display: 'flex',
-            gap: 10,
-            '.rhap_main, .rhap_controls-section': {
-              gap: '30px',
-            },
-          }}
-        >
-          <AudioPlayer
-            ref={player}
-            src={`${process.env.NEXT_PUBLIC_API_URL}/tracks/${
-              currentTrack ? currentTrack.trackUrl : 'hoidanit.mp3'
-            }`}
-            volume={0.5}
-            style={{
-              background: '#f2f2f2',
-              boxShadow: 'unset',
-            }}
-            layout="horizontal-reverse"
-            onPlay={() => onAudioPlayPause(true)}
-            onPause={() => onAudioPlayPause(false)}
-          />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              justifyContent: 'center',
-              alignItems: 'start',
-              minWidth: 100,
-            }}
+    <>
+      {currentTrack?._id && (
+        <div style={{ marginTop: 100 }}>
+          <AppBar
+            position="fixed"
+            sx={{ top: 'auto', bottom: 0, background: '#f2f2f2' }}
           >
-            <div style={{ color: '#ccc' }}>{currentTrack?.description}</div>
-            <div style={{ color: 'black' }}>{currentTrack?.title}</div>
-          </Box>
-        </Container>
-      </AppBar>
-    </div>
+            <Container
+              sx={{
+                display: 'flex',
+                gap: 10,
+                '.rhap_main, .rhap_controls-section': {
+                  gap: '30px',
+                },
+              }}
+            >
+              <AudioPlayer
+                ref={player}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/tracks/${
+                  currentTrack ? currentTrack?.trackUrl : 'hoidanit.mp3'
+                }`}
+                volume={0.5}
+                style={{
+                  background: '#f2f2f2',
+                  boxShadow: 'unset',
+                }}
+                layout="horizontal-reverse"
+                onPlay={() => onAudioPlayPause(true)}
+                onPause={() => onAudioPlayPause(false)}
+              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  justifyContent: 'center',
+                  alignItems: 'start',
+                  minWidth: 100,
+                }}
+              >
+                <div
+                  style={{
+                    color: '#ccc',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {currentTrack?.description}
+                </div>
+                <div
+                  style={{
+                    color: 'black',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {currentTrack?.title}
+                </div>
+              </Box>
+            </Container>
+          </AppBar>
+        </div>
+      )}
+    </>
   );
 };
 
