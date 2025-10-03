@@ -1,6 +1,7 @@
 'use client';
 
 import { useTrackContext } from '@/app/lib/track.wrapper';
+import { fetchDefaultImages } from '@/utils/api';
 import { useWaveSurfer } from '@/utils/customHook';
 import { Pause, PlayArrow } from '@mui/icons-material';
 import { Box, Container, IconButton, Tooltip } from '@mui/material';
@@ -10,6 +11,7 @@ import './wave.scss';
 
 interface IProps {
   track: ITrackTop | null;
+  comments: IComment[] | undefined;
 }
 
 const WaveTrack = (props: IProps) => {
@@ -17,7 +19,7 @@ const WaveTrack = (props: IProps) => {
   const timeRef = useRef(null);
   const durationRef = useRef(null);
   const hoverRef = useRef(null);
-  const { track } = props;
+  const { track, comments } = props;
   const { _id: id, trackUrl: audio } = track || {};
 
   const { currentTrack, setCurrentTrack } = useTrackContext() ?? {};
@@ -100,30 +102,6 @@ const WaveTrack = (props: IProps) => {
       wavesurfer?.playPause();
     }
   }, [currentTrack, isPlaying]);
-
-  const arrComments = [
-    {
-      id: 1,
-      avatar: 'http://localhost:8000/images/chill1.png',
-      moment: 10,
-      user: 'username 1',
-      content: 'just a comment1',
-    },
-    {
-      id: 2,
-      avatar: 'http://localhost:8000/images/chill1.png',
-      moment: 30,
-      user: 'username 2',
-      content: 'just a comment3',
-    },
-    {
-      id: 3,
-      avatar: 'http://localhost:8000/images/chill1.png',
-      moment: 50,
-      user: 'username 3',
-      content: 'just a comment3',
-    },
-  ];
 
   const calLeft = (moment: number) => {
     const duration = 199;
@@ -224,11 +202,11 @@ const WaveTrack = (props: IProps) => {
             }}
           ></div>
           <div className="comments" style={{ position: 'relative' }}>
-            {arrComments.map((cmt) => (
-              <Tooltip title={cmt.content} key={cmt.id} arrow>
+            {comments?.map((cmt) => (
+              <Tooltip title={cmt.content} key={cmt._id} arrow>
                 <img
-                  key={cmt.id}
-                  src={cmt.avatar}
+                  key={cmt._id}
+                  src={fetchDefaultImages(cmt.user?.type)}
                   style={{
                     width: '20px',
                     height: '20px',

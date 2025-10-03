@@ -1,4 +1,5 @@
 'use client';
+import { fetchDefaultImages } from '@/utils/api';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import MoreIcon from '@mui/icons-material/MoreVert';
@@ -218,7 +219,15 @@ export default function AppHeader() {
                   <Link href={'playlist'}>Playlists</Link>
                   <Link href={'like'}>Likes</Link>
                   <Link href={'/track/upload'}>Upload</Link>
-                  <Avatar onClick={handleProfileMenuOpen}>QP</Avatar>
+                  <Avatar onClick={handleProfileMenuOpen}>
+                    <img
+                      src={fetchDefaultImages(session.user.type)}
+                      style={{
+                        width: 40,
+                        height: 40,
+                      }}
+                    ></img>
+                  </Avatar>
                 </>
               ) : (
                 <Link
