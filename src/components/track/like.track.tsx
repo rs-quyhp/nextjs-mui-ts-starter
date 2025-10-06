@@ -4,7 +4,6 @@ import { sendRequest } from '@/utils/api';
 import { Favorite, PlayArrow } from '@mui/icons-material';
 import { Box, Chip, Container } from '@mui/material';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface IProps {
@@ -13,7 +12,6 @@ interface IProps {
 
 const LikeTrack = (props: IProps) => {
   const session = useSession();
-  const route = useRouter();
   const [isTrackLiked, setIsTrackLiked] = useState(false);
   const [likedTracks, setLikedTracks] = useState<ITrackTop[]>([]);
   const { track } = props;

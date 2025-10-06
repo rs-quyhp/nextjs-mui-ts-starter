@@ -2,10 +2,33 @@ import CommentTrack from '@/components/track/comment.track';
 import LikeTrack from '@/components/track/like.track';
 import WaveTrack from '@/components/track/wave.track';
 import { sendRequest } from '@/utils/api';
+import { Metadata, ResolvingMetadata } from 'next';
 
 interface IProps {
   params: {
     slug: string;
+  };
+}
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = (await params).slug;
+
+  // fetch post information
+  const post = await sendRequest<IBackendRes<ITrackTop>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/${slug}`,
+    method: 'GET',
+  });
+
+  return {
+    title: post.data?.title,
+    description: post.data?.description,
   };
 }
 
