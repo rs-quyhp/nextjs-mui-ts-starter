@@ -1,10 +1,12 @@
 'use client';
 
 import { useTrackContext } from '@/app/lib/track.wrapper';
-import { fetchDefaultImages } from '@/utils/api';
+import { fetchDefaultImages, sendRequest } from '@/utils/api';
 import { useWaveSurfer } from '@/utils/customHook';
 import { Pause, PlayArrow } from '@mui/icons-material';
 import { Box, Container, IconButton, Tooltip } from '@mui/material';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { WaveSurferOptions } from 'wavesurfer.js';
 import './wave.scss';
@@ -15,6 +17,9 @@ interface IProps {
 }
 
 const WaveTrack = (props: IProps) => {
+  const firstViewRef = useRef(true);
+  const session = useSession();
+  const route = useRouter();
   const containerRef = useRef(null);
   const timeRef = useRef(null);
   const durationRef = useRef(null);
@@ -110,6 +115,26 @@ const WaveTrack = (props: IProps) => {
     }
   }, [wavesurfer]);
 
+  const onIncreaseView = async () => {
+    if (firstViewRef.current) {
+      const res = await sendRequest<IBackendRes<IModelPaginate<ITrackTop>>>({
+        url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/increase-view`,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.data?.access_token}`,
+        },
+        body: {
+          trackId: track?._id,
+        },
+      });
+
+      if (res.data) {
+        route.refresh();
+        firstViewRef.current = false;
+      }
+    }
+  };
+
   const calLeft = (moment: number) => {
     const duration = 199;
     const percent = (moment / duration) * 100;
@@ -156,7 +181,10 @@ const WaveTrack = (props: IProps) => {
                   background: 'rgba(255, 98, 0, 0.94)',
                 },
               }}
-              onClick={onPlayclick}
+              onClick={() => {
+                onIncreaseView();
+                onPlayclick();
+              }}
             >
               {isPlaying ? <Pause /> : <PlayArrow />}
             </IconButton>
