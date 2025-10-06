@@ -29,6 +29,14 @@ export async function generateMetadata(
   return {
     title: post.data?.title,
     description: post.data?.description,
+    openGraph: {
+      type: 'website',
+      title: post.data?.title,
+      description: post.data?.description,
+      images: [
+        'https://techcrunch.com/wp-content/uploads/2016/01/soundcloud-reverse.png',
+      ],
+    },
   };
 }
 
