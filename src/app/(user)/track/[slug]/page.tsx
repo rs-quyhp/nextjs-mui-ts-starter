@@ -1,4 +1,5 @@
 import CommentTrack from '@/components/track/comment.track';
+import LikeTrack from '@/components/track/like.track';
 import WaveTrack from '@/components/track/wave.track';
 import { sendRequest } from '@/utils/api';
 
@@ -30,6 +31,7 @@ const TrackDetailPage = async (props: IProps) => {
   return (
     <>
       <WaveTrack track={trackRes.data} comments={commentRes.data?.result} />
+      <LikeTrack track={trackRes.data} />
       <CommentTrack track={trackRes.data} comments={commentRes.data?.result} />
     </>
   );
