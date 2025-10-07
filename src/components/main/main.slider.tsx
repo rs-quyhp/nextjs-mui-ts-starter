@@ -5,6 +5,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button/Button';
 import Divider from '@mui/material/Divider';
+import Image from 'next/image';
 import Link from 'next/link';
 import Slider, { Settings } from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
@@ -64,6 +65,32 @@ const MainSlider = (props: IProps) => {
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
   //box === div
   return (
@@ -89,9 +116,22 @@ const MainSlider = (props: IProps) => {
       <Slider {...settings}>
         {data?.map((track) => (
           <div className="track" key={track._id}>
-            <img
-              src={`${process.env.NEXT_PUBLIC_API_URL}/images/${track.imgUrl}`}
-            />
+            <div
+              style={{
+                position: 'relative',
+                height: '200px',
+                width: '100%',
+              }}
+            >
+              <Image
+                alt={track.title}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/images/${track.imgUrl}`}
+                fill
+                style={{
+                  objectFit: 'contain',
+                }}
+              />
+            </div>
             <Link
               href={`/track/${convertSlugUrl(track.title)}-${
                 track._id

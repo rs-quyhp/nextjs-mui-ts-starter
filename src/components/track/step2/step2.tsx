@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import UploadButton from '../upload.button';
@@ -165,10 +166,20 @@ const Step2 = (props: IProps) => {
             }}
           >
             {trackInfo.imgUrl && (
-              <img
-                src={`${process.env.NEXT_PUBLIC_API_URL}/images/${trackInfo.imgUrl}`}
-                style={{ height: '250px' }}
-              />
+              <div
+                style={{
+                  position: 'relative',
+                  height: '250px',
+                  width: '100%',
+                }}
+              >
+                <Image
+                  alt={trackInfo.title ?? 'track thumbnail'}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/images/${trackInfo.imgUrl}`}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
             )}
           </Box>
           <Box

@@ -17,6 +17,7 @@ import { alpha, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
@@ -221,13 +222,12 @@ export default function AppHeader() {
                   <Link href={'like'}>Likes</Link>
                   <Link href={'/track/upload'}>Upload</Link>
                   <Avatar onClick={handleProfileMenuOpen}>
-                    <img
+                    <Image
+                      alt={session.user.username}
                       src={fetchDefaultImages(session.user.type)}
-                      style={{
-                        width: 40,
-                        height: 40,
-                      }}
-                    ></img>
+                      width={40}
+                      height={40}
+                    />
                   </Avatar>
                 </>
               ) : (

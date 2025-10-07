@@ -3,15 +3,9 @@
 import { useTrackContext } from '@/app/lib/track.wrapper';
 import { convertSlugUrl } from '@/utils/api';
 import { Pause, PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Box, Card, CardContent, IconButton, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -90,11 +84,14 @@ const ProfileTrack = (props: IProp) => {
           </IconButton>
         </Box>
       </Box>
-      <CardMedia
-        component="img"
-        sx={{ height: 155, objectFit: 'cover', width: 155 }}
-        image={`${process.env.NEXT_PUBLIC_API_URL}/images/${track.imgUrl}`}
-        alt={track.description}
+      <Image
+        alt={track.description ?? 'track description'}
+        src={`${process.env.NEXT_PUBLIC_API_URL}/images/${track.imgUrl}`}
+        width={160}
+        height={160}
+        style={{
+          objectFit: 'cover',
+        }}
       />
     </Card>
   );

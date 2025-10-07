@@ -6,6 +6,7 @@ import { useWaveSurfer } from '@/utils/customHook';
 import { Pause, PlayArrow } from '@mui/icons-material';
 import { Box, Container, IconButton, Tooltip } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { WaveSurferOptions } from 'wavesurfer.js';
@@ -239,12 +240,13 @@ const WaveTrack = (props: IProps) => {
           <div className="comments" style={{ position: 'relative' }}>
             {comments?.map((cmt) => (
               <Tooltip title={cmt.content} key={cmt._id} arrow>
-                <img
+                <Image
+                  alt={cmt.user?.name ?? 'commenter name'}
                   key={cmt._id}
                   src={fetchDefaultImages(cmt.user?.type)}
+                  width={20}
+                  height={20}
                   style={{
-                    width: '20px',
-                    height: '20px',
                     position: 'absolute',
                     zIndex: '3',
                     top: '71px',
@@ -269,16 +271,17 @@ const WaveTrack = (props: IProps) => {
           background: '#cccccc',
           flexShrink: '0',
           margin: '24px',
+          position: 'relative',
         }}
       >
-        <img
+        <Image
+          alt={track?.title ?? 'track thumbnail'}
           src={`${process.env.NEXT_PUBLIC_API_URL}/images/${track?.imgUrl}`}
+          fill
           style={{
-            width: 250,
-            height: 250,
             objectFit: 'cover',
           }}
-        ></img>
+        />
       </Box>
     </Container>
   );
