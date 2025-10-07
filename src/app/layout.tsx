@@ -2,6 +2,7 @@ import '@/app/styles/app.css';
 import ThemeRegistry from '@/components/theme-registry/theme.registry';
 import { ToastProvider } from '@/utils/toast';
 import AuthProvider from './lib/auth.provider';
+import Providers from './lib/nprogressbar.wrapper';
 import { TrackContextProvider } from './lib/track.wrapper';
 
 export const metadata = {
@@ -16,15 +17,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ThemeRegistry>
-        <AuthProvider>
-          <ToastProvider>
-            <TrackContextProvider>
-              <body>{children}</body>
-            </TrackContextProvider>
-          </ToastProvider>
-        </AuthProvider>
-      </ThemeRegistry>
+      <body>
+        <ThemeRegistry>
+          <Providers>
+            <AuthProvider>
+              <ToastProvider>
+                <TrackContextProvider>{children}</TrackContextProvider>
+              </ToastProvider>
+            </AuthProvider>
+          </Providers>
+        </ThemeRegistry>
+      </body>
     </html>
   );
 }

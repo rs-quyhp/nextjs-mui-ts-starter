@@ -12,6 +12,7 @@
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "dependencies": {
+    "@bprogress/next": "3.2.12",
     "@emotion/cache": "11.11.0",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
