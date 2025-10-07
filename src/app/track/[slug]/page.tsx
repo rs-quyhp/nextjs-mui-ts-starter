@@ -1,7 +1,7 @@
 import CommentTrack from '@/components/track/comment.track';
 import LikeTrack from '@/components/track/like.track';
 import WaveTrack from '@/components/track/wave.track';
-import { sendRequest } from '@/utils/api';
+import { convertSlugUrl, sendRequest } from '@/utils/api';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -44,6 +44,57 @@ export async function generateMetadata(
   };
 }
 
+export async function generateStaticParams() {
+  const chills = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: {
+      category: 'CHILL',
+      limit: 10,
+    },
+  });
+
+  const workout = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: {
+      category: 'WORKOUT',
+      limit: 10,
+    },
+  });
+
+  const party = await sendRequest<IBackendRes<ITrackTop[]>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/top`,
+    method: 'POST',
+    body: {
+      category: 'PARTY',
+      limit: 10,
+    },
+  });
+
+  const slugs: { slug: string }[] = [];
+
+  chills.data?.map((track) => {
+    slugs.push({
+      slug: `${convertSlugUrl(track.title)}-${track._id}.html`,
+    });
+  });
+
+  workout.data?.map((track) => {
+    slugs.push({
+      slug: `${convertSlugUrl(track.title)}-${track._id}.html`,
+    });
+  });
+
+  party.data?.map((track) => {
+    slugs.push({
+      slug: `${convertSlugUrl(track.title)}-${track._id}.html`,
+    });
+  });
+
+  return slugs;
+}
+
 const TrackDetailPage = async (props: IProps) => {
   const { slug } = props.params;
 
@@ -63,6 +114,8 @@ const TrackDetailPage = async (props: IProps) => {
       sort: '-createdAt',
     },
   });
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   if (!trackRes?.data) notFound();
 
