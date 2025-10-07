@@ -3,6 +3,7 @@ import LikeTrack from '@/components/track/like.track';
 import WaveTrack from '@/components/track/wave.track';
 import { sendRequest } from '@/utils/api';
 import { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 
 interface IProps {
   params: {
@@ -63,7 +64,7 @@ const TrackDetailPage = async (props: IProps) => {
     },
   });
 
-  if (!trackRes?.data) return <></>;
+  if (!trackRes?.data) notFound();
 
   return (
     <>
