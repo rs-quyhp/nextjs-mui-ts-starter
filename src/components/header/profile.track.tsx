@@ -1,6 +1,7 @@
 'use client';
 
 import { useTrackContext } from '@/app/lib/track.wrapper';
+import { convertSlugUrl } from '@/utils/api';
 import { Pause, PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
 import {
   Box,
@@ -11,6 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface IProp {
@@ -41,25 +43,21 @@ const ProfileTrack = (props: IProp) => {
         }}
       >
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography
-            component="div"
-            variant="h5"
-            onClick={() =>
-              route.push(
-                `/track/${track._id}?audio=${track.trackUrl}&id=${track._id}`
-              )
-            }
-            sx={{
-              cursor: 'pointer',
+          <Link
+            href={`/track/${convertSlugUrl(track.title)}-${
+              track._id
+            }.html?audio=${track.trackUrl}`}
+            style={{
               overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 1,
-              WebkitBoxOrient: 'vertical',
               textOverflow: 'ellipsis',
+              textDecoration: 'unset',
+              color: '#000000',
+              fontSize: '25px',
+              fontWeight: '400',
             }}
           >
             {track.title}
-          </Typography>
+          </Link>
           <Typography
             variant="subtitle1"
             component="div"

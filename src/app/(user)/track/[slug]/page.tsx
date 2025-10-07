@@ -20,19 +20,22 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const slug = (await params).slug;
 
+  const strs = slug.split('-');
+  const trackId = strs[strs.length - 1].split('.')[0];
+  console.log('Check trackId: ', trackId);
   // fetch post information
-  const post = await sendRequest<IBackendRes<ITrackTop>>({
-    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/${slug}`,
+  const track = await sendRequest<IBackendRes<ITrackTop>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/${trackId}`,
     method: 'GET',
   });
 
   return {
-    title: post.data?.title,
-    description: post.data?.description,
+    title: track.data?.title,
+    description: track.data?.description,
     openGraph: {
       type: 'website',
-      title: post.data?.title,
-      description: post.data?.description,
+      title: track.data?.title,
+      description: track.data?.description,
       images: [
         'https://techcrunch.com/wp-content/uploads/2016/01/soundcloud-reverse.png',
       ],
@@ -43,8 +46,11 @@ export async function generateMetadata(
 const TrackDetailPage = async (props: IProps) => {
   const { slug } = props.params;
 
+  const strs = slug.split('-');
+  const trackId = strs[strs.length - 1].split('.')[0];
+
   const trackRes = await sendRequest<IBackendRes<ITrackTop>>({
-    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/${slug}`,
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/${trackId}`,
     method: 'GET',
   });
 
@@ -52,7 +58,7 @@ const TrackDetailPage = async (props: IProps) => {
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/comments`,
     method: 'POST',
     queryParams: {
-      trackId: slug,
+      trackId: trackId,
       sort: '-createdAt',
     },
   });
