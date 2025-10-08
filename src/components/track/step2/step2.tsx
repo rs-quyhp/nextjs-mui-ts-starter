@@ -93,6 +93,15 @@ const Step2 = (props: IProps) => {
     console.log('Check create track res: ', res);
 
     if (!res.error) {
+      await sendRequest<IBackendRes<any>>({
+        url: '/api/revalidate',
+        method: 'POST',
+        queryParams: {
+          tag: 'track-by-user',
+          secret: 'justarandomstring',
+        },
+      });
+
       toast.success('New track added');
       setTabIndex(0);
     } else {

@@ -4,6 +4,7 @@ import { sendRequest } from '@/utils/api';
 import { Favorite, PlayArrow } from '@mui/icons-material';
 import { Box, Chip, Container } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface IProps {
@@ -12,8 +13,8 @@ interface IProps {
 
 const LikeTrack = (props: IProps) => {
   const session = useSession();
+  const route = useRouter();
   const [isTrackLiked, setIsTrackLiked] = useState(false);
-  const [likedTracks, setLikedTracks] = useState<ITrackTop[]>([]);
   const { track } = props;
 
   const onLikeClick = async () => {
@@ -32,7 +33,15 @@ const LikeTrack = (props: IProps) => {
     });
 
     if (res.data) {
-      getLikedTracks();
+      await sendRequest<IBackendRes<any>>({
+        url: '/api/revalidate',
+        method: 'POST',
+        queryParams: {
+          tag: 'track-by-id',
+          secret: 'justarandomstring',
+        },
+      });
+      route.refresh();
     }
   };
 
@@ -45,6 +54,9 @@ const LikeTrack = (props: IProps) => {
         headers: {
           Authorization: `Bearer ${session.data?.access_token}`,
         },
+        nextOption: {
+          cache: 'no-store',
+        },
       });
 
       console.log('Check like res: ', res);
@@ -54,7 +66,6 @@ const LikeTrack = (props: IProps) => {
         const trackLiked = likedTracks.some((t) => t._id === track?._id);
         console.log('Check track liked: ', trackLiked);
         setIsTrackLiked(trackLiked);
-        setLikedTracks(likedTracks);
       }
     }
   };
@@ -87,10 +98,7 @@ const LikeTrack = (props: IProps) => {
       >
         <Chip
           icon={<PlayArrow color="disabled" />}
-          label={
-            likedTracks.find((t) => t._id === track?._id)?.countPlay ??
-            track?.countPlay
-          }
+          label={track?.countPlay}
           sx={{
             border: 'unset',
           }}
@@ -98,10 +106,7 @@ const LikeTrack = (props: IProps) => {
         />
         <Chip
           icon={<Favorite color="disabled" />}
-          label={
-            likedTracks.find((t) => t._id === track?._id)?.countLike ??
-            track?.countLike
-          }
+          label={track?.countLike}
           sx={{
             border: 'unset',
           }}

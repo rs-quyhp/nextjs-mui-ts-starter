@@ -39,6 +39,14 @@ const CommentTrack = (props: IProps) => {
     });
 
     if (res.data) {
+      await sendRequest<IBackendRes<any>>({
+        url: '/api/revalidate',
+        method: 'POST',
+        queryParams: {
+          tag: 'track-comments',
+          secret: 'justarandomstring',
+        },
+      });
       setMyComment('');
       route.refresh();
     }
@@ -121,6 +129,7 @@ const CommentTrack = (props: IProps) => {
                 justifyContent: 'space-between',
                 width: '100%',
               }}
+              key={comment._id}
             >
               <Box sx={{ display: 'flex', gap: '12px' }}>
                 <Avatar>

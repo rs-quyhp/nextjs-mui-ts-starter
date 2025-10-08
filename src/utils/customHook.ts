@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import WaveSurfer, { WaveSurferOptions } from 'wavesurfer.js';
 
 export const useHasMounted = () => {
@@ -19,6 +19,7 @@ export const useWaveSurfer = (
 ) => {
   const [wavesurfer, setWavesuffer] = useState<WaveSurfer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [duration, setDuration] = useState(0);
 
   const onRender = (channels: any, ctx: any) => {
     const { width, height } = ctx.canvas;
@@ -118,10 +119,10 @@ export const useWaveSurfer = (
     const subscriptions = [
       wavesurfer.on('play', () => setIsPlaying(true)),
       wavesurfer.on('pause', () => setIsPlaying(false)),
-      wavesurfer?.on(
-        'decode',
-        (duration) => (durationRef.current!.textContent = formatTime(duration))
-      ),
+      wavesurfer?.on('decode', (duration) => {
+        durationRef.current!.textContent = formatTime(duration);
+        setDuration(duration);
+      }),
       wavesurfer?.on(
         'timeupdate',
         (currentTime) =>
@@ -141,5 +142,5 @@ export const useWaveSurfer = (
     return () => subscriptions.forEach((unsub) => unsub());
   }, [wavesurfer]);
 
-  return { wavesurfer, isPlaying };
+  return { wavesurfer, isPlaying, duration };
 };

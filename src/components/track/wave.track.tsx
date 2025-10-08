@@ -2,7 +2,7 @@
 
 import { useTrackContext } from '@/app/lib/track.wrapper';
 import { fetchDefaultImages, sendRequest } from '@/utils/api';
-import { useWaveSurfer } from '@/utils/customHook';
+import { useHasMounted, useWaveSurfer } from '@/utils/customHook';
 import { Pause, PlayArrow } from '@mui/icons-material';
 import { Box, Container, IconButton, Tooltip } from '@mui/material';
 import { useSession } from 'next-auth/react';
@@ -27,6 +27,7 @@ const WaveTrack = (props: IProps) => {
   const hoverRef = useRef(null);
   const { track, comments } = props;
   const { _id: id, trackUrl: audio } = track || {};
+  const hasMounted = useHasMounted();
 
   const { currentTrack, setCurrentTrack, setWavesurfer } =
     useTrackContext() ?? {};
@@ -92,7 +93,7 @@ const WaveTrack = (props: IProps) => {
     };
   }, []);
 
-  const { wavesurfer, isPlaying } = useWaveSurfer(
+  const { wavesurfer, isPlaying, duration } = useWaveSurfer(
     containerRef,
     optionMemo,
     timeRef,
@@ -130,14 +131,21 @@ const WaveTrack = (props: IProps) => {
       });
 
       if (res.data) {
-        route.refresh();
+        await sendRequest<IBackendRes<any>>({
+          url: '/api/revalidate',
+          method: 'POST',
+          queryParams: {
+            tag: 'track-by-id',
+            secret: 'justarandomstring',
+          },
+        });
         firstViewRef.current = false;
+        route.refresh();
       }
     }
   };
 
-  const calLeft = (moment: number) => {
-    const duration = 199;
+  const calLeft = (moment: number, duration = 199) => {
     const percent = (moment / duration) * 100;
     return `${percent}%`;
   };
@@ -183,8 +191,8 @@ const WaveTrack = (props: IProps) => {
                 },
               }}
               onClick={() => {
-                onIncreaseView();
                 onPlayclick();
+                onIncreaseView();
               }}
             >
               {isPlaying ? <Pause /> : <PlayArrow />}
@@ -250,12 +258,12 @@ const WaveTrack = (props: IProps) => {
                     position: 'absolute',
                     zIndex: '3',
                     top: '71px',
-                    left: calLeft(cmt.moment),
+                    left: calLeft(cmt.moment, duration),
                   }}
                   onPointerMove={(e) => {
                     const hover = hoverRef.current as HTMLDivElement | null;
                     if (hover) {
-                      hover.style.width = calLeft(cmt.moment + 3);
+                      hover.style.width = calLeft(cmt.moment + 3, duration);
                     }
                   }}
                 />

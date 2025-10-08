@@ -104,6 +104,10 @@ const TrackDetailPage = async (props: IProps) => {
   const trackRes = await sendRequest<IBackendRes<ITrackTop>>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/${trackId}`,
     method: 'GET',
+    nextOption: {
+      // cache: 'no-store',
+      next: { tags: ['track-by-id'] },
+    },
   });
 
   const commentRes = await sendRequest<IBackendRes<IModelPaginate<IComment>>>({
@@ -113,9 +117,11 @@ const TrackDetailPage = async (props: IProps) => {
       trackId: trackId,
       sort: '-createdAt',
     },
+    nextOption: {
+      // cache: 'no-store',
+      next: { tags: ['track-comments'] },
+    },
   });
-
-  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   if (!trackRes?.data) notFound();
 
