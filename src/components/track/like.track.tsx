@@ -41,6 +41,15 @@ const LikeTrack = (props: IProps) => {
           secret: 'justarandomstring',
         },
       });
+
+      await sendRequest<IBackendRes<any>>({
+        url: '/api/revalidate',
+        method: 'POST',
+        queryParams: {
+          tag: 'favorite-by-user',
+          secret: 'justarandomstring',
+        },
+      });
       route.refresh();
     }
   };
