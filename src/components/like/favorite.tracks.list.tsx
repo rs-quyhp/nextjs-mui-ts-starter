@@ -55,6 +55,7 @@ const FavoriteTracks = (props: IProps) => {
               }
               style={{
                 cursor: 'pointer',
+                width: '210px',
               }}
             >
               <Image
@@ -71,6 +72,7 @@ const FavoriteTracks = (props: IProps) => {
                 style={{
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {track.title}

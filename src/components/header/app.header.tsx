@@ -19,8 +19,9 @@ import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -64,6 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function AppHeader() {
   const { data: session } = useSession();
+  const [searchQuery, setSearchQuery] = useState('');
   console.log('Check session: ', session);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -73,6 +75,14 @@ export default function AppHeader() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q') as string;
+
+  useEffect(() => {
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [query]);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -201,6 +211,13 @@ export default function AppHeader() {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
+                onKeyDown={(e) => {
+                  if (e.key == 'Enter') {
+                    router.push(`/search?q=${searchQuery}`);
+                  }
+                }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </Search>
             <Box sx={{ flexGrow: 1 }} />

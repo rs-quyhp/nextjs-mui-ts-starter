@@ -82,6 +82,7 @@ const AppFooter = () => {
                     color: '#ccc',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
+                    overflow: 'hidden',
                   }}
                 >
                   {currentTrack?.description}
@@ -91,6 +92,7 @@ const AppFooter = () => {
                     color: 'black',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
+                    overflow: 'hidden',
                   }}
                 >
                   {currentTrack?.title}
