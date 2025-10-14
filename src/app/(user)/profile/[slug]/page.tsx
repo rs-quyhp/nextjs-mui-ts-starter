@@ -1,6 +1,12 @@
 import ProfileTrack from '@/components/header/profile.track';
 import { sendRequest } from '@/utils/api';
 import { Container, Grid } from '@mui/material';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Your Profile',
+  description: 'Your account details',
+};
 
 const ProfilePage = async ({ params }: { params: { slug: string } }) => {
   const tracks = await sendRequest<IBackendRes<IModelPaginate<ITrackTop>>>({

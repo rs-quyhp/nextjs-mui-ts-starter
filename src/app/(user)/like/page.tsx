@@ -1,7 +1,13 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import FavoriteTracks from '@/components/like/favorite.tracks.list';
 import { sendRequest } from '@/utils/api';
+import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
+
+export const metadata: Metadata = {
+  title: 'Favorite tracks',
+  description: 'List of all track you liked',
+};
 
 const LikePage = async () => {
   const session = await getServerSession(authOptions);

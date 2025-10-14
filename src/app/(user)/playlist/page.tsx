@@ -1,7 +1,13 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import Playlist from '@/components/playlist/playlist';
 import { sendRequest } from '@/utils/api';
+import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
+
+export const metadata: Metadata = {
+  title: 'Your playlist',
+  description: 'List of all playlist you created',
+};
 
 const PlaylistPage = async () => {
   const session = await getServerSession(authOptions);

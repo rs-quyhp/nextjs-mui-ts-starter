@@ -1,9 +1,43 @@
 import { sendRequest } from '@/utils/api';
+import dayjs, { ManipulateType } from 'dayjs';
 import NextAuth, { AuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+
+const refreshAccessToken = async (token: JWT) => {
+  const res = await sendRequest<IBackendRes<JWT>>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`,
+    method: 'POST',
+    body: {
+      refresh_token: token.refresh_token,
+    },
+  });
+
+  if (res.data) {
+    console.log('>>> check old token: ', token.access_token);
+    console.log('>>> check new token: ', res.data?.access_token);
+
+    return {
+      ...token,
+      access_token: res.data.access_token,
+      refresh_token: res.data.refresh_token,
+      access_expire: dayjs()
+        .add(
+          +process.env.TOKEN_EXPIRE_NUMBER!,
+          process.env.TOKEN_EXPIRE_UNIT as ManipulateType
+        )
+        .unix(),
+      error: '',
+    };
+  } else {
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    };
+  }
+};
 
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -76,6 +110,21 @@ export const authOptions: AuthOptions = {
         token.refresh_token = user?.refresh_token;
         //@ts-ignore
         token.user = user?.user;
+        //@ts-ignore
+        token.access_expire = dayjs()
+          .add(
+            +process.env.TOKEN_EXPIRE_NUMBER!,
+            process.env.TOKEN_EXPIRE_UNIT! as ManipulateType
+          )
+          .unix();
+      }
+
+      const isTokenExpired = dayjs().isAfter(
+        dayjs.unix((token.access_expire as number) ?? 0)
+      );
+      console.log('Check token expired: ', isTokenExpired);
+      if (isTokenExpired) {
+        return refreshAccessToken(token);
       }
 
       return token;
@@ -84,6 +133,8 @@ export const authOptions: AuthOptions = {
       if (token) {
         session.access_token = token.access_token;
         session.refresh_token = token.refresh_token;
+        session.access_expire = token.access_expire;
+        session.error = token.error;
         session.user = token.user;
       }
 
