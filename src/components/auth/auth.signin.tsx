@@ -213,7 +213,10 @@ export const SignInForm = () => {
             >
               <GitHub />
             </Avatar>
-            <Avatar sx={{ cursor: 'pointer', background: 'orange' }}>
+            <Avatar
+              sx={{ cursor: 'pointer', background: 'orange' }}
+              onClick={() => signIn('google')}
+            >
               <Google />
             </Avatar>
           </Grid>
