@@ -156,10 +156,11 @@ const Step2 = (props: IProps) => {
 
       <Grid container>
         <Grid
-          item
-          xs={12}
-          sm={6}
-          md={4}
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 4,
+          }}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -217,10 +218,11 @@ const Step2 = (props: IProps) => {
           </Box>
         </Grid>
         <Grid
-          item
-          xs={12}
-          sm={6}
-          md={8}
+          size={{
+            xs: 1,
+            sm: 6,
+            md: 8,
+          }}
           sx={{
             display: 'flex',
             flexDirection: 'column',

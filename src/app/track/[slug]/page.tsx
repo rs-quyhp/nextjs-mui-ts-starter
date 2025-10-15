@@ -6,9 +6,7 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface IProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 type Props = {
@@ -96,7 +94,7 @@ export async function generateStaticParams() {
 }
 
 const TrackDetailPage = async (props: IProps) => {
-  const { slug } = props.params;
+  const { slug } = await props.params;
 
   const strs = slug.split('-');
   const trackId = strs[strs.length - 1].split('.')[0];

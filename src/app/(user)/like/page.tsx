@@ -1,4 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOption';
 import FavoriteTracks from '@/components/like/favorite.tracks.list';
 import { sendRequest } from '@/utils/api';
 import { Metadata } from 'next';

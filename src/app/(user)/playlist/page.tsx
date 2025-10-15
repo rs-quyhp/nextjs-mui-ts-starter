@@ -1,4 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOption';
 import Playlist from '@/components/playlist/playlist';
 import { sendRequest } from '@/utils/api';
 import { Metadata } from 'next';

@@ -11,11 +11,11 @@ export const useHasMounted = () => {
 };
 
 export const useWaveSurfer = (
-  containerRef: React.RefObject<HTMLDivElement>,
+  containerRef: React.RefObject<HTMLDivElement | null>,
   options: Omit<WaveSurferOptions, 'container'>,
-  timeRef: React.RefObject<HTMLDivElement>,
-  durationRef: React.RefObject<HTMLDivElement>,
-  hoverRef: React.RefObject<HTMLDivElement>
+  timeRef: React.RefObject<HTMLDivElement | null>,
+  durationRef: React.RefObject<HTMLDivElement | null>,
+  hoverRef: React.RefObject<HTMLDivElement | null>
 ) => {
   const [wavesurfer, setWavesuffer] = useState<WaveSurfer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);

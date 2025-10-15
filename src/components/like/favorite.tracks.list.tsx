@@ -37,7 +37,6 @@ const FavoriteTracks = (props: IProps) => {
       >
         {favoriteTracks?.map((track) => (
           <Grid
-            item
             key={track._id}
             sx={{
               display: 'flex',

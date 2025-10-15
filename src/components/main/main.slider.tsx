@@ -1,9 +1,7 @@
 'use client';
 import { convertSlugUrl } from '@/utils/api';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Box } from '@mui/material';
-import Button from '@mui/material/Button/Button';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -34,7 +32,7 @@ const MainSlider = (props: IProps) => {
           width: 35,
         }}
       >
-        <ChevronRightIcon />
+        <ChevronRight />
       </Button>
     );
   };
@@ -53,7 +51,7 @@ const MainSlider = (props: IProps) => {
           width: 35,
         }}
       >
-        <ChevronLeftIcon />
+        <ChevronLeft />
       </Button>
     );
   };

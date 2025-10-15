@@ -8,12 +8,18 @@ export const metadata: Metadata = {
   description: 'Your account details',
 };
 
-const ProfilePage = async ({ params }: { params: { slug: string } }) => {
+const ProfilePage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const slug = (await params).slug;
+
   const tracks = await sendRequest<IBackendRes<IModelPaginate<ITrackTop>>>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks/users`,
     method: 'POST',
     body: {
-      id: params.slug,
+      id: slug,
     },
     nextOption: {
       next: { tag: ['track-by-user'] },
@@ -27,7 +33,7 @@ const ProfilePage = async ({ params }: { params: { slug: string } }) => {
     <Container sx={{ my: '24px' }}>
       <Grid container spacing={2}>
         {data?.map((track, index) => (
-          <Grid item xs={12} md={6} key={index}>
+          <Grid size={{ xs: 12, md: 6 }} key={index}>
             <ProfileTrack track={track} />
           </Grid>
         ))}

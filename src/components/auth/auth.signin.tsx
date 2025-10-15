@@ -111,11 +111,7 @@ export const SignInForm = () => {
         }}
       >
         <Grid
-          item
-          xs={12}
-          sm={8}
-          md={5}
-          lg={4}
+          size={{ xs: 12, sm: 8, md: 5, lg: 4 }}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -166,24 +162,26 @@ export const SignInForm = () => {
               id="outlined-adornment-password"
               type={showPassword ? 'text' : 'password'}
               label="Password"
-              inputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showPassword
-                          ? 'hide the password'
-                          : 'display the password'
-                      }
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      onMouseUp={handleMouseUpPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={
+                          showPassword
+                            ? 'hide the password'
+                            : 'display the password'
+                        }
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        onMouseUp={handleMouseUpPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
               }}
               onChange={(e) => setPassword(e.target.value)}
               error={isErrorPassword}
@@ -201,7 +199,6 @@ export const SignInForm = () => {
           <Divider sx={{ width: '100%' }}>Or using</Divider>
 
           <Grid
-            item
             sx={{
               display: 'flex',
               gap: '12px',
