@@ -1,6 +1,6 @@
 'use client';
 
-import { sendRequest } from '@/utils/api';
+import { handleAddPlaylistTrackAction } from '@/utils/actions/actions';
 import { useToast } from '@/utils/toast';
 import { Add } from '@mui/icons-material';
 import {
@@ -69,25 +69,11 @@ const AddPlayListTrackButton = (props: IProps) => {
       tracks: currentTrackIds,
     };
 
-    const res = await sendRequest<IBackendRes<IPlaylist>>({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/playlists`,
-      method: 'PATCH',
+    const res = await handleAddPlaylistTrackAction({
       body,
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-      },
     });
 
     if (res.data) {
-      await sendRequest<IBackendRes<any>>({
-        url: '/api/revalidate',
-        method: 'POST',
-        queryParams: {
-          tag: 'playlist-by-user',
-          secret: 'justarandomstring',
-        },
-      });
-
       handleClose();
       setCurrentPlaylistId('');
       setCurrentTrackIds([]);

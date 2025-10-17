@@ -1,11 +1,11 @@
 'use client';
 
 import { useTrackContext } from '@/app/lib/track.wrapper';
-import { fetchDefaultImages, sendRequest } from '@/utils/api';
+import { handleAddTrackCommentAction } from '@/utils/actions/actions';
+import { fetchDefaultImages } from '@/utils/api';
 import { Avatar, Box, Container, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -20,33 +20,17 @@ interface IProps {
 const CommentTrack = (props: IProps) => {
   const { track, comments } = props;
   const [myComment, setMyComment] = useState('');
-  const session = useSession();
   const route = useRouter();
   const { wavesurfer, setCurrentTrack } = useTrackContext() ?? {};
 
   const onSubmitComment = async () => {
-    const res = await sendRequest<IBackendRes<IComment>>({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/comments`,
-      method: 'POST',
-      body: {
-        content: myComment,
-        moment: Math.round((wavesurfer as WaveSurfer).getCurrentTime() ?? 0),
-        track: track?._id,
-      },
-      headers: {
-        Authorization: `Bearer ${session.data?.access_token}`,
-      },
+    const res = await handleAddTrackCommentAction({
+      content: myComment,
+      moment: Math.round((wavesurfer as WaveSurfer).getCurrentTime() ?? 0),
+      trackId: track?._id,
     });
 
     if (res.data) {
-      await sendRequest<IBackendRes<any>>({
-        url: '/api/revalidate',
-        method: 'POST',
-        queryParams: {
-          tag: 'track-comments',
-          secret: 'justarandomstring',
-        },
-      });
       setMyComment('');
       route.refresh();
     }

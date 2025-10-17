@@ -1,6 +1,6 @@
 'use client';
 
-import { sendRequest } from '@/utils/api';
+import { handleUploadTrackAction } from '@/utils/actions/actions';
 import { useToast } from '@/utils/toast';
 import {
   Box,
@@ -80,28 +80,9 @@ const Step2 = (props: IProps) => {
   ];
 
   const onSave = async () => {
-    console.log('check track info: ', trackInfo);
-    const res = await sendRequest<IBackendRes<ITrackTop[]>>({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tracks`,
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-      body: trackInfo,
-    });
-
-    console.log('Check create track res: ', res);
+    const res = await handleUploadTrackAction({ trackInfo });
 
     if (!res.error) {
-      await sendRequest<IBackendRes<any>>({
-        url: '/api/revalidate',
-        method: 'POST',
-        queryParams: {
-          tag: 'track-by-user',
-          secret: 'justarandomstring',
-        },
-      });
-
       toast.success('New track added');
       setTabIndex(0);
     } else {

@@ -1,5 +1,6 @@
 'use client';
 
+import { handleLikeTrackAction } from '@/utils/actions/actions';
 import { sendRequest } from '@/utils/api';
 import { Favorite, PlayArrow } from '@mui/icons-material';
 import { Box, Chip, Container } from '@mui/material';
@@ -20,36 +21,12 @@ const LikeTrack = (props: IProps) => {
   const onLikeClick = async () => {
     setIsTrackLiked(!isTrackLiked);
 
-    const res = await sendRequest<IBackendRes<ITrackTop>>({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/likes`,
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${session.data?.access_token}`,
-      },
-      body: {
-        track: track?._id,
-        quantity: isTrackLiked ? -1 : 1,
-      },
+    const res = await handleLikeTrackAction({
+      trackId: track?._id,
+      quantity: isTrackLiked ? -1 : 1,
     });
 
     if (res.data) {
-      await sendRequest<IBackendRes<any>>({
-        url: '/api/revalidate',
-        method: 'POST',
-        queryParams: {
-          tag: 'track-by-id',
-          secret: 'justarandomstring',
-        },
-      });
-
-      await sendRequest<IBackendRes<any>>({
-        url: '/api/revalidate',
-        method: 'POST',
-        queryParams: {
-          tag: 'favorite-by-user',
-          secret: 'justarandomstring',
-        },
-      });
       route.refresh();
     }
   };
